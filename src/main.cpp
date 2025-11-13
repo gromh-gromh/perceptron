@@ -180,18 +180,21 @@ void train(Perceptron &perceptron, bool verbose = false)
             break;
         }
     }
-    std::cout << "Train ended on epoch " << epoch - 1 << ", time: " << (double)(clock() - start)/CLOCKS_PER_SEC << std::endl;
+    std::cout << "Train ended on epoch " << epoch - 1 << " | Time: " << (double)(clock() - start)/CLOCKS_PER_SEC << std::endl;
     std::cout << "Mean error on train is " << mean_error << std::endl;
 }
 
 void validate(Perceptron &perceptron, model &perceptron_model, bool verbose = false)
 {
-    double mean_error;
+    double mean_error = 0;
     int file_count = 0;
     int success_count = 0;
+    double mean_time = 0;
 
     for (auto &validation_path : std::filesystem::directory_iterator(validation_directory))
     {
+        clock_t start = clock();
+
         bitImage image = readImage(validation_path.path());
         perceptron.set_input(image.data);
         perceptron.set_expected_output(image.type);
@@ -203,6 +206,7 @@ void validate(Perceptron &perceptron, model &perceptron_model, bool verbose = fa
             success_count++;
 
         mean_error += perceptron.get_error();
+        mean_time += (double)(clock() - start)/CLOCKS_PER_SEC;
         file_count++;
 
         if (verbose) 
@@ -221,8 +225,10 @@ void validate(Perceptron &perceptron, model &perceptron_model, bool verbose = fa
     }
 
     mean_error /= file_count;
+    mean_time /= file_count;
+    double success_rate = (double)(success_count) / (double)(file_count) * 100;
 
-    std::cout << "Validation ended with " << (double)(success_count) / (double)(file_count) * 100 << "% of correct results" << std::endl;
+    std::cout << "Validation ended with " << success_rate << "% of correct results | Mean output time: " << std::fixed << std::setprecision(7) << mean_time << std::endl;
     std::cout << "Mean error on validation is " << mean_error << std::endl;
 }
 
