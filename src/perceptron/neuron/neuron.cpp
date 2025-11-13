@@ -62,12 +62,10 @@ void Neuron::set_input_neurons(std::vector<Neuron> &neurons)
     {
         Input input(neurons[neuron_index]);
         this->inputs.push_back(input);
-
-        // std::cout << this->inputs[neuron_index].get_weight() << std::endl;
     }
 };
 
-std::vector<Input> Neuron::get_inputs()
+std::vector<Input> &Neuron::get_inputs()
 {
     return this->inputs;
 }

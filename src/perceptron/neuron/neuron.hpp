@@ -16,7 +16,7 @@ class Neuron{
         double get_expected_value();
         void update_value();
         void set_input_neurons(std::vector<Neuron> &neurons);
-        std::vector<Input> get_inputs();
+        std::vector<Input> &get_inputs();
         static double activation(double value);
         void update_learning_rule();
         void update_learning_rule(double next_learning_rule_sum);

@@ -20,6 +20,8 @@ class Perceptron {
         );
         void set_input(std::vector<double> input);
         void set_expected_output(std::vector<double> expected_output);
+        void set_weights(std::vector<std::vector<double>> &weights);
+        std::vector<std::vector<double>> get_weights();
         double get_error();
         std::vector<double> get_output();
         void train();

@@ -32,6 +32,55 @@ void Perceptron::set_expected_output(std::vector<double> expected_output)
     this->expected_output = expected_output;
 }
 
+void Perceptron::set_weights(std::vector<std::vector<double>> &weights)
+{ 
+    this->initialize_neurons();
+
+    size_t neuron_weight_index = 0;
+
+    for(size_t layer_index = 1; layer_index < this->layer_count; layer_index++)
+    {
+        std::vector<Neuron> &layer = this->neuron_layers[layer_index];
+
+        for(size_t neuron_index = 0; neuron_index < layer.size(); neuron_index++)
+        {
+            Neuron &neuron = layer[neuron_index];
+            std::vector<Input> &inputs = neuron.get_inputs();
+
+            for(size_t input_index = 0; input_index < neuron.get_inputs().size(); input_index++)
+            {
+                Input &input = neuron.get_inputs()[input_index];
+                input.set_weight(weights[neuron_weight_index][input_index]);
+            }
+            neuron_weight_index++;
+        }
+    }
+}
+
+std::vector<std::vector<double>> Perceptron::get_weights()
+{
+    std::vector<std::vector<double>> weights;
+
+    for(size_t layer_index = 1; layer_index < this->layer_count; layer_index++)
+    {
+        std::vector<Neuron> &layer = this->neuron_layers[layer_index];
+
+        for(Neuron &neuron : layer)
+        {
+            std::vector<double> neuron_weights;
+
+            for(Input &input : neuron.get_inputs())
+            {
+                neuron_weights.push_back(input.get_weight());
+            }
+
+            weights.push_back(neuron_weights);
+        }
+    }
+
+    return weights;
+}
+
 double Perceptron::get_error()
 {
     return this->error;
@@ -66,6 +115,17 @@ void Perceptron::train()
     }
 }
 
+void Perceptron::run()
+{
+    if (this->neuron_layers.size() == this->layer_count)
+        this->reset_neurons();
+    else 
+        this->initialize_neurons();
+
+    this->calculate_neurons();
+    this->update_error();
+}
+
 void Perceptron::debug_print_neuron_values()
 {   
     std::cout << "Neuron values" << std::endl;
@@ -85,16 +145,6 @@ void Perceptron::debug_print_neuron_values()
             std::cout << " ";
     }
     std::cout << ")" << std::endl;
-}
-
-void Perceptron::run()
-{
-    if (this->neuron_layers.size() == this->layer_count)
-        this->reset_neurons();
-    else 
-        this->initialize_neurons();
-
-    this->calculate_neurons();
 }
 
 void Perceptron::initialize_neurons()
