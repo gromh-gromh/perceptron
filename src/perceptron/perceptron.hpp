@@ -14,9 +14,9 @@ class Perceptron {
             size_t output_size,
             size_t layer_count,
             size_t hidden_layer_size,
-            double max_error,
-            double min_learning_factor,
-            double max_learning_factor
+            double max_error=0,
+            double min_learning_factor=0,
+            double max_learning_factor=0
         );
         void set_input(std::vector<double> input);
         void set_expected_output(std::vector<double> expected_output);

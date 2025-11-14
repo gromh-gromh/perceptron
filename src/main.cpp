@@ -254,10 +254,7 @@ int main(void){
         perceptron_model.input_size, 
         perceptron_model.output_size, 
         perceptron_model.layer_count, 
-        perceptron_model.hidden_layer_size, 
-        max_error,
-        min_learning_factor,
-        max_learning_factor
+        perceptron_model.hidden_layer_size
     );
 
     validate(validation_perceptron, perceptron_model);
