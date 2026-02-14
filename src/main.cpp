@@ -8,7 +8,8 @@ constexpr size_t input_size = 49;
 constexpr size_t output_size = 3;
 constexpr size_t layer_count = 3;
 constexpr size_t hidden_layer_size = 21;
-constexpr double max_error = 0.1;
+constexpr double max_learning_error = 0.1;
+constexpr double max_validation_error = 0.5;
 constexpr double min_learning_factor = 0.1;
 constexpr double max_learning_factor = 0.3;
 
@@ -176,7 +177,7 @@ void train(Perceptron &perceptron, bool verbose = false)
 
         old_mean_error = mean_error;
 
-        if (count_barrier == max_barrier && mean_error < max_error) {
+        if (count_barrier == max_barrier && mean_error < max_learning_error) {
             break;
         }
     }
@@ -202,7 +203,7 @@ void validate(Perceptron &perceptron, model &perceptron_model, bool verbose = fa
 
         perceptron.run();
 
-        if (perceptron.get_error() <= max_error)
+        if (perceptron.get_error() <= max_validation_error)
             success_count++;
 
         mean_error += perceptron.get_error();
@@ -238,12 +239,13 @@ int main(void){
         output_size, 
         layer_count, 
         hidden_layer_size, 
-        max_error,
+        max_learning_error,
         min_learning_factor,
         max_learning_factor
     );
 
     train(training_perceptron);
+    training_perceptron.debug_print_neuron_values();
 
     std::vector<std::vector<double>> weights = training_perceptron.get_weights();
     save_model(weights, model_file);
@@ -257,7 +259,7 @@ int main(void){
         perceptron_model.hidden_layer_size
     );
 
-    validate(validation_perceptron, perceptron_model);
+    validate(validation_perceptron, perceptron_model, false);
 
     return 0;
 }

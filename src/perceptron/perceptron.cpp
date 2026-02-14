@@ -243,7 +243,6 @@ void Perceptron::update_learning_factor()
 
 void Perceptron::update_learning_rules()
 {
-
     for (size_t layer_index = this->layer_count; layer_index-- > 0;)
     {
         if (layer_index == this->layer_count - 1)
@@ -261,7 +260,6 @@ void Perceptron::update_learning_rules()
                 Neuron &neuron = this->neuron_layers[layer_index][neuron_index];
                 for (Neuron &next_layer_neuron : this->neuron_layers[layer_index + 1])
                 {
-                    // std::cout << next_layer_neuron.get_learning_rule() << " " << next_layer_neuron.get_inputs()[neuron_index].get_weight() << std::endl;
                     next_learning_rule_sum += next_layer_neuron.get_learning_rule() * next_layer_neuron.get_inputs()[neuron_index].get_weight();
                 }
 
